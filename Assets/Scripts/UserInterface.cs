@@ -6,7 +6,7 @@ public class UserInterface : SingletonPattern
 {
     public void Init()
     {
-
+        EnableUI();
     }
 
     [SerializeField] private List<GameObject> Elements = new List<GameObject>();

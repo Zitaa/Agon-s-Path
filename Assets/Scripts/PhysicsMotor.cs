@@ -19,6 +19,11 @@ public class PhysicsMotor : SingletonPattern
 
         return new Vector2(x, y).normalized * speed * Time.deltaTime;
     }
+
+    public static Vector2 Movement(Vector2 movement, float speed)
+    {
+        return Movement(movement.x, movement.y, speed);
+    }
 	
 	#endregion
 }

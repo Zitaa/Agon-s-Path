@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameObjectBehaviour : GameBehaviour {
+public class GameObjectBehaviour : MonoBehaviour {
 	
 	#region UNITY FUNCTIONS
 	

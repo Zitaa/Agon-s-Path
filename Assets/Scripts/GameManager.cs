@@ -9,7 +9,7 @@ namespace Game
         public void Init()
         {
             GetFPSSettings().Init();
-            GetUI().EnableUI();
+            GetUI().Init();
         }
 
         [SerializeField] private Transform player;
