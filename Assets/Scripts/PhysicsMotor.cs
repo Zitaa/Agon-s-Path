@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class PhysicsMotor : SingletonPattern
 {
-	#region PRIVATE FUNCTIONS
-	
-	
-	
-	#endregion
-	
-	#region PUBLIC FUNCTIONS
-	
-	public static Vector2 Movement(float x, float y, float speed)
+    #region UNITY FUNCTIONS
+
+    private IEnumerator MoveDelay()
+    {
+        yield return new WaitForSeconds(4);
+    }
+
+    #endregion
+
+    #region PRIVATE FUNCTIONS
+
+
+
+    #endregion
+
+    #region PUBLIC FUNCTIONS
+
+    public static Vector2 Movement(float x, float y, float speed)
     {
         if (Mathf.Abs(x) > Mathf.Abs(y)) y = 0;
         else x = 0;

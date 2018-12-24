@@ -1,1 +1,1 @@
-C:\Users\nicklas.haggqvist\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.postprocessing@2.1.1
+C:\Users\haegg\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.postprocessing@2.1.1

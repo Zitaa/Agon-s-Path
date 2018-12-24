@@ -1,20 +1,36 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 
 namespace Game
 {
+    public enum GameStates
+    {
+        IDLE = 0,
+        COMBAT = 1,
+        SPELL = 2
+    };
+
     [System.Serializable]
     public class GameManager : SingletonPattern
     {
+        [SerializeField] private uint entities = 0;
+
         public void Init()
         {
             GetFPSSettings().Init();
             GetUI().Init();
+            GetSpellSystem().Init();
         }
 
+        [SerializeField] private Camera camera;
         [SerializeField] private Transform player;
-        [SerializeField] FramesPerSecondSettings FPS;
-        [SerializeField] UserInterface UI;
+        [SerializeField] private FramesPerSecondSettings FPS;
+        [SerializeField] private UserInterface UI;
+        [SerializeField] private CombatSystem combatSystem;
+        [SerializeField] private SpellSystem spellSystem;
+        [SerializeField] private Miscellaneous miscellaneous;
 
         #region PRIVATE FUNCTIONS
 
@@ -24,20 +40,25 @@ namespace Game
 
         #region PUBLIC FUNCTIONS
 
-        public Transform GetPlayer()
-        {
-            return player;
-        }
+        public void IncreaseEntities() { entities++; }
 
-        public FramesPerSecondSettings GetFPSSettings()
-        {
-            return FPS;
-        }
+        public void KillEntity(EntityAI entity) { MonoBehaviour.Destroy(entity.gameObject); }
 
-        public UserInterface GetUI()
-        {
-            return UI;
-        }
+        public uint GetEntities() { return entities; }
+
+        public Camera GetCamera() { return camera; }
+
+        public Transform GetPlayer() { return player; }
+
+        public FramesPerSecondSettings GetFPSSettings() { return FPS; }
+
+        public UserInterface GetUI() { return UI; }
+
+        public CombatSystem GetCombatSystem() { return combatSystem; }
+
+        public SpellSystem GetSpellSystem() { return spellSystem; }
+
+        public Miscellaneous GetMisc() { return miscellaneous; }
 
         #endregion
     }
@@ -94,5 +115,31 @@ namespace Game
         {
             return maxFrames;
         }
+    }
+
+    [System.Serializable]
+    public class Miscellaneous : SingletonPattern
+    {
+        [SerializeField] private GameStates currentState;
+
+        public List<GameObject> spells = new List<GameObject>();
+
+        public void ChangeGameState(GameStates state)
+        {
+            if (currentState == state) return;
+
+            currentState = state;
+            switch (currentState)
+            {
+                case GameStates.IDLE:
+                    break;
+                case GameStates.COMBAT:
+                    break;
+                case GameStates.SPELL:
+                    break;
+            }
+        }
+
+        public GameStates GetState() { return currentState; }
     }
 }

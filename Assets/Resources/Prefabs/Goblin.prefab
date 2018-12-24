@@ -23,8 +23,7 @@ GameObject:
   - component: {fileID: 95794657154137838}
   - component: {fileID: 61444462138123228}
   - component: {fileID: 50574457732279260}
-  - component: {fileID: 114939616019905094}
-  - component: {fileID: 114065191534301700}
+  - component: {fileID: 114340403958913930}
   m_Layer: 8
   m_Name: Goblin
   m_TagString: Untagged
@@ -39,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1595702622031288}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 91.54, y: 2.21, z: 0}
+  m_LocalPosition: {x: 27.17938, y: 32.007286, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -56,7 +55,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -108,7 +107,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114065191534301700
+--- !u!114 &114340403958913930
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,31 +115,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 1595702622031288}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df80e72efb2597e4592f509b7bf4c625, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ca2f1466c41a71488b00361486f5907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  healthBar: {fileID: 0}
---- !u!114 &114939616019905094
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1595702622031288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b57ed54d22f0f04fa0b91cbd870f5bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 1024
-  speed: 1.6
-  damage: 10
-  meleeRange: 1.2
-  radius: 6.63
-  lootPrefab: {fileID: 1431940149905630, guid: 2e272b2e21698b644b1a886e45d00be0, type: 2}
+  settings:
+    speed: 0
+    maxHealth:
+      baseValue: 10
+    damage:
+      baseValue: 2
+    meleeRange:
+      baseValue: 3
+    force:
+      baseValue: 1
+    viewRange:
+      baseValue: 6
+    targetMask:
+      serializedVersion: 2
+      m_Bits: 1024
+  ID: 0
 --- !u!212 &212987702321226798
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -1,6 +1,5 @@
 ﻿using Game;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameBehaviour : MonoBehaviour {
 
@@ -30,16 +29,16 @@ public class GameBehaviour : MonoBehaviour {
         if (GetGame().GetFPSSettings().DisplayFrames()) GetGame().GetUI().GetUIElement("FPS").Enable();
         else GetGame().GetUI().GetUIElement("FPS").Disable();
 	}
-	
-	#endregion
-	
-	#region PRIVATE FUNCTIONS
-	
 
-	
-	#endregion
-	
-	#region PUBLIC FUNCTIONS
+    #endregion
+
+    #region PRIVATE FUNCTIONS
+
+
+
+    #endregion
+
+    #region PUBLIC FUNCTIONS
 
     public GameManager GetGame()
     {

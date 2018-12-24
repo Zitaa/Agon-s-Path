@@ -178,7 +178,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Attack
-  m_Speed: 1
+  m_Speed: 3
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101471137374822108}
@@ -195,7 +195,7 @@ AnimatorState:
   m_Motion: {fileID: 7400000, guid: 63d070952816ebe4c92b0337837f0d8c, type: 2}
   m_Tag: 
   m_SpeedParameter: 
-  m_MirrorParameter: 
+  m_MirrorParameter: walking
   m_CycleOffsetParameter: 
   m_TimeParameter: 
 --- !u!1102 &1102227164873078066

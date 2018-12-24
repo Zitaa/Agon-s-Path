@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using Game;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameObjectBehaviour : MonoBehaviour {
-	
+
 	#region UNITY FUNCTIONS
 	
 	private void Start ()
@@ -13,8 +14,8 @@ public class GameObjectBehaviour : MonoBehaviour {
 	
 	private void Update () 
 	{
-		
-	}
+
+    }
 	
 	#endregion
 	
@@ -25,8 +26,8 @@ public class GameObjectBehaviour : MonoBehaviour {
 	#endregion
 	
 	#region PUBLIC FUNCTIONS
-	
-	
+    
+	public GameManager GetGame() { return GameBehaviour.instance.GetGame(); }
 	
 	#endregion
 }

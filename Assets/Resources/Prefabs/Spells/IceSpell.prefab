@@ -21,8 +21,8 @@ GameObject:
   - component: {fileID: 4783612699792132}
   - component: {fileID: 212805377471749038}
   - component: {fileID: 95827834591836680}
-  - component: {fileID: 114457631820990488}
   - component: {fileID: 61081913956702888}
+  - component: {fileID: 114823948801298916}
   m_Layer: 11
   m_Name: IceSpell
   m_TagString: Untagged
@@ -86,7 +86,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114457631820990488
+--- !u!114 &114823948801298916
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,13 +94,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1375954389138502}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8aecab35c7c03a40abcd09351f583f1, type: 3}
+  m_Script: {fileID: 11500000, guid: dcd5cb14327f26f4bb2757e971759b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 5
-  speed: 10
-  damage: 30
-  cost: 40
+  lifeTime: 4
+  speed: 4
+  damage: 0
+  cost: 5
 --- !u!212 &212805377471749038
 SpriteRenderer:
   m_ObjectHideFlags: 1
