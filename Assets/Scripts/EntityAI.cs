@@ -10,6 +10,7 @@ public class EntityAI : GameObjectBehaviour
     private SpriteRenderer sr;
     private Rigidbody2D rb2d;
     private Animator anim;
+    private InputManager input;
     private Vector2 movement;
     private Vector2 direction;
     private Color normalColor;
@@ -31,26 +32,14 @@ public class EntityAI : GameObjectBehaviour
         sr = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        input = GetGame().GetInputSettings();
 
         normalColor = sr.color;
     }
 
     protected virtual void Update()
     {
-        if (Input.GetKeyUp(KeyCode.LeftAlt))
-        {
-            if (!GetGame().GetSpellSystem().IsActive()) GetGame().GetSpellSystem().Start();
-            else if (GetGame().GetSpellSystem().IsActive()) GetGame().GetSpellSystem().End();
-        }
-        if (GetGame().GetSpellSystem().IsActive())
-        {
-            if (Input.GetKeyUp(KeyCode.E))
-            {
-                Vector2 spawnPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                GameObject clone = Instantiate(GetGame().GetSpellSystem().GetSpellIcon(), spawnPos, Quaternion.identity);
-                GetGame().GetSpellSystem().AddSpellIcon(clone);
-            }
-        }
+        
     }
 
     protected virtual IEnumerator Attack()
@@ -89,19 +78,6 @@ public class EntityAI : GameObjectBehaviour
 
     #region PRIVATE FUNCTIONS
 
-    protected virtual void UserInput()
-    {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
-
-        movement = new Vector2(x, y);
-
-        if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            StartCoroutine(Attack());
-        }
-    }
-
     protected virtual void HandlePlayerMovement()
     {
         rb2d.velocity = PhysicsMotor.Movement(movement, settings.speed * EntitySettings.SPEED_MULTIPLIER);
@@ -109,15 +85,32 @@ public class EntityAI : GameObjectBehaviour
         if (movement != Vector2.zero) anim.SetBool("walking", true);
         else anim.SetBool("walking", false);
 
-        if (movement.x < 0)
+        if (GetGame().GetMisc().GetState() == Game.GameStates.COMBAT)
         {
-            sr.flipX = true;
-            direction = -transform.right;
+            Vector2 entityPos = GetGame().GetCombatSystem().GetEntityTransform().position;
+            if (entityPos.x < transform.position.x)
+            {
+                sr.flipX = true;
+                direction = -transform.right;
+            }
+            else if (entityPos.x > transform.position.x)
+            {
+                sr.flipX = false;
+                direction = transform.right;
+            }
         }
-        else if (movement.x > 0)
+        else
         {
-            sr.flipX = false;
-            direction = transform.right;
+            if (movement.x < 0)
+            {
+                sr.flipX = true;
+                direction = -transform.right;
+            }
+            else if (movement.x > 0)
+            {
+                sr.flipX = false;
+                direction = transform.right;
+            }
         }
 
         if (movement.y < 0) direction = -transform.up;
@@ -148,6 +141,51 @@ public class EntityAI : GameObjectBehaviour
     public EntitySettings GetEntitySettings()
     {
         return settings;
+    }
+
+    #endregion
+
+    #region USERINPUT 
+
+    protected virtual void UserInput()
+    {
+        MovementInput();
+        MeleeInput();
+        SpellInput();
+    }
+
+    private void MovementInput()
+    {
+        float x = input.GetMovementInput("Horizontal");
+        float y = input.GetMovementInput("Vertical");
+
+        movement = new Vector2(x, y);
+    }
+
+    private void MeleeInput()
+    {
+        if (input.GetKeyUp(input.meleeAttack))
+        {
+            StartCoroutine(Attack());
+        }
+    }
+
+    private void SpellInput()
+    {
+        if (input.GetKeyUp(input.spellActivator))
+        {
+            if (!GetGame().GetSpellSystem().IsActive()) GetGame().GetSpellSystem().Start();
+            else if (GetGame().GetSpellSystem().IsActive()) GetGame().GetSpellSystem().End();
+        }
+        if (GetGame().GetSpellSystem().IsActive())
+        {
+            if (input.GetKeyUp(input.spellAttack))
+            {
+                Vector2 spawnPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                GameObject clone = Instantiate(GetGame().GetSpellSystem().GetSpellIcon(), spawnPos, Quaternion.identity);
+                GetGame().GetSpellSystem().AddSpellIcon(clone);
+            }
+        }
     }
 
     #endregion

@@ -5,9 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class CombatSystem : SingletonPattern
 {
-    [SerializeField] private float maxDistance;
-    [SerializeField] private float smoothTime;
-
     private EntityAI entityInCombatWith;
     private bool inCombat;
 
@@ -33,6 +30,9 @@ public class CombatSystem : SingletonPattern
 
     public void CombatCameraMovement()
     {
+        float maxDistance = GetGame().GetCameraSettings().GetTransitionDistance();
+        float smoothening = GetGame().GetCameraSettings().GetTransitionSmoothening();
+
         Vector2 playerPos = GetGame().GetPlayer().position;
         Vector2 entityPos = entityInCombatWith.transform.position;
 
@@ -40,8 +40,10 @@ public class CombatSystem : SingletonPattern
         Vector2 offset = midPoint - playerPos;
         offset = Vector2.ClampMagnitude(offset, maxDistance);
 
-        Vector3 targetPos = new Vector3(playerPos.x + offset.x, playerPos.y + offset.y, GetGame().GetCamera().transform.position.z);
-        GetGame().GetCamera().transform.position = Vector3.Lerp(GetGame().GetCamera().transform.position, targetPos, smoothTime);
+        Camera camera = GetGame().GetCameraSettings().GetCamera();
+
+        Vector3 targetPos = new Vector3(playerPos.x + offset.x, playerPos.y + offset.y, camera.transform.position.z);
+        camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, smoothening);
     }
 
     public void EnterCombat(EntityAI entity)

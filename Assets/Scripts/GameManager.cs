@@ -23,11 +23,12 @@ namespace Game
             GetUI().Init();
             GetSpellSystem().Init();
         }
-
-        [SerializeField] private Camera camera;
+        
         [SerializeField] private Transform player;
         [SerializeField] private FramesPerSecondSettings FPS;
         [SerializeField] private UserInterface UI;
+        [SerializeField] private InputManager inputSettings;
+        [SerializeField] private CameraSettings cameraSettings;
         [SerializeField] private CombatSystem combatSystem;
         [SerializeField] private SpellSystem spellSystem;
         [SerializeField] private Miscellaneous miscellaneous;
@@ -46,13 +47,15 @@ namespace Game
 
         public uint GetEntities() { return entities; }
 
-        public Camera GetCamera() { return camera; }
-
         public Transform GetPlayer() { return player; }
 
         public FramesPerSecondSettings GetFPSSettings() { return FPS; }
 
         public UserInterface GetUI() { return UI; }
+
+        public InputManager GetInputSettings() { return inputSettings; }
+
+        public CameraSettings GetCameraSettings() { return cameraSettings; }
 
         public CombatSystem GetCombatSystem() { return combatSystem; }
 
@@ -115,6 +118,20 @@ namespace Game
         {
             return maxFrames;
         }
+    }
+
+    [System.Serializable]
+    public class CameraSettings : SingletonPattern
+    {
+        [SerializeField] private Camera camera;
+        [SerializeField] private float maxTransitionDistance;
+        [SerializeField] private float transitionSmoothening;
+
+        public float GetTransitionDistance() { return maxTransitionDistance; }
+
+        public float GetTransitionSmoothening() { return transitionSmoothening; }
+
+        public Camera GetCamera() { return camera; }
     }
 
     [System.Serializable]

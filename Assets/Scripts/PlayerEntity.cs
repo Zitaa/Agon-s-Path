@@ -3,18 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerEntity : EntityAI {
-	
+
+    private new Camera camera;
+    private InputManager input;
+
 	#region UNITY FUNCTIONS
 	
 	protected override void Start ()
 	{
         base.Start();
+        camera = GetGame().GetCameraSettings().GetCamera();
+        input = GetGame().GetInputSettings();
     }
 
     protected override void Update()
     {
         base.Update();
         base.UserInput();
+        //input.GetUserInput();
         base.HandlePlayerMovement();
     }
 
@@ -30,11 +36,11 @@ public class PlayerEntity : EntityAI {
         }
         else
         {
-            Vector3 defaultPos = new Vector3(GetGame().GetPlayer().position.x,
-            GetGame().GetPlayer().position.y,
-            GetGame().GetCamera().transform.position.z);
+            Vector3 defaultPos = new Vector3(transform.position.x,
+            transform.position.y,
+            camera.transform.position.z);
 
-            GetGame().GetCamera().transform.position = Vector3.Lerp(GetGame().GetCamera().transform.position, defaultPos, .1f);
+            camera.transform.position = Vector3.Lerp(camera.transform.position, defaultPos, .1f);
         }
     }
 

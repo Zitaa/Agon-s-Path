@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using CodeMonkey.Utils;
@@ -11,8 +10,6 @@ public class SpellSystem : SingletonPattern
     [SerializeField] private Transform UITransform;
     [SerializeField] private PostProcessVolume PPVolume;
     [SerializeField] private GameObject spellIcon;
-    [SerializeField] private float maxDistance;
-    [SerializeField] private float smoothTime;
     [SerializeField] private bool spellActive = false;
 
     private GameObject top, bottom;

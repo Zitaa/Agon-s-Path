@@ -25,7 +25,7 @@ public class PhysicsMotor : SingletonPattern
     {
         if (Mathf.Abs(x) > Mathf.Abs(y)) y = 0;
         else x = 0;
-
+        
         return new Vector2(x, y).normalized * speed * Time.deltaTime;
     }
 

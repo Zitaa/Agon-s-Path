@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\GameHandler.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameObjectBehaviour.cs" />
+    <Compile Include="Assets\Scripts\InputManager.cs" />
     <Compile Include="Assets\Scripts\PhysicsMotor.cs" />
     <Compile Include="Assets\Scripts\PlayerEntity.cs" />
     <Compile Include="Assets\Scripts\SingletonPattern.cs" />
