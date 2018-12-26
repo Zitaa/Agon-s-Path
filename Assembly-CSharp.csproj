@@ -61,24 +61,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CameraMovement.cs" />
-    <Compile Include="Assets\Scripts\CombatSystem.cs" />
-    <Compile Include="Assets\Scripts\EnemyAI.cs" />
+    <Compile Include="Assets\Scripts\Centroid.cs" />
+    <Compile Include="Assets\Scripts\EnemyEntity.cs" />
     <Compile Include="Assets\Scripts\EntityAI.cs" />
     <Compile Include="Assets\Scripts\EntitySettings.cs" />
     <Compile Include="Assets\Scripts\GameBehaviour.cs" />
-    <Compile Include="Assets\Scripts\GameHandler.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\GameObjectBehaviour.cs" />
-    <Compile Include="Assets\Scripts\InputManager.cs" />
-    <Compile Include="Assets\Scripts\PhysicsMotor.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IDestructable.cs" />
     <Compile Include="Assets\Scripts\PlayerEntity.cs" />
-    <Compile Include="Assets\Scripts\SingletonPattern.cs" />
-    <Compile Include="Assets\Scripts\SpellProjectile.cs" />
-    <Compile Include="Assets\Scripts\SpellSystem.cs" />
+    <Compile Include="Assets\Scripts\Singleton\CameraBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Singleton\CombatSystem.cs" />
+    <Compile Include="Assets\Scripts\Singleton\FramesPerSecondSystem.cs" />
+    <Compile Include="Assets\Scripts\Singleton\InputManager.cs" />
+    <Compile Include="Assets\Scripts\Singleton\Singleton.cs" />
+    <Compile Include="Assets\Scripts\Singleton\UserInterface.cs" />
     <Compile Include="Assets\Scripts\Stat.cs" />
-    <Compile Include="Assets\Scripts\UserInterface.cs" />
-    <Compile Include="Assets\Scripts\UserInterfaceElement.cs" />
     <Compile Include="Assets\Utility\FunctionPeriodic.cs" />
     <Compile Include="Assets\Utility\FunctionTimer.cs" />
     <Compile Include="Assets\Utility\FunctionUpdater.cs" />
