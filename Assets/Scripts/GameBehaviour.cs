@@ -18,12 +18,14 @@ public class GameBehaviour : MonoBehaviour
 	private void Start ()
 	{
         game.Init();
+        StartCoroutine(game.GetDynamicEnvironment().AdvanceTime());
 	}
 	
 	private void Update () 
 	{
         game.GetFramesPerSecondSystem().CalculateFrames(Time.unscaledDeltaTime);
         game.GetCameraSettings().CameraMovement();
+        game.GetDynamicEnvironment().UpdateWeatherPosition();
 	}
 	
 	#endregion

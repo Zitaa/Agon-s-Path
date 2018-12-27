@@ -11,11 +11,12 @@ public class EnemyEntity : EntityAI
 	protected override void Start ()
 	{
         base.Start();
-        //settings.speed.AddModifier(200);
+        settings.speed.AddModifier(200);
 	}
 	
 	protected override void Update () 
 	{
+        base.Update();
         float distance = Vector2.Distance(transform.position, target.position);
         if (distance <= 5)
         {
@@ -37,7 +38,9 @@ public class EnemyEntity : EntityAI
 
     private void ExitCombat()
     {
+        if (inCombat) game.GetCombatSystem().RemoveEntity(this);
         inCombat = false;
+        rb2d.velocity = Vector2.zero;
     }
 	
 	#endregion

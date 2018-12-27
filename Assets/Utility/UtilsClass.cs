@@ -30,7 +30,8 @@ namespace CodeMonkey.Utils {
         public const int sortingOrderDefault = 5000;
         
         // Get Sorting order to set SpriteRenderer sortingOrder, higher position = lower sortingOrder
-        public static int GetSortingOrder(Vector3 position, int offset, int baseSortingOrder = sortingOrderDefault) {
+        public static int GetSortingOrder(Vector3 position, int offset, int baseSortingOrder = sortingOrderDefault)
+        {
             return (int)(baseSortingOrder - position.y) + offset;
         }
 

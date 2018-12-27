@@ -14,7 +14,23 @@ public class PlayerEntity : EntityAI
 	
 	protected override void Update () 
 	{
+        base.Update();
         base.HandlePlayerMovement();
+
+        if (input.GetKeyUp(input.meleeAttack))
+        {
+            if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            {
+                anim.Play("Attack");
+                StartCoroutine(Attack()); 
+            }
+        }
+
+        if (input.GetKeyUp(input.spellActivator))
+        {
+            if (!game.GetSpellSystem().IsActive()) game.GetSpellSystem().Start();
+            else game.GetSpellSystem().End();
+        }
 	}
 
     #endregion

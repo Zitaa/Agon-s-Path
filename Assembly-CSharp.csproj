@@ -61,19 +61,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Building.cs" />
     <Compile Include="Assets\Scripts\Centroid.cs" />
+    <Compile Include="Assets\Scripts\DynamicEnvironment.cs" />
     <Compile Include="Assets\Scripts\EnemyEntity.cs" />
     <Compile Include="Assets\Scripts\EntityAI.cs" />
     <Compile Include="Assets\Scripts\EntitySettings.cs" />
     <Compile Include="Assets\Scripts\GameBehaviour.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IDestructable.cs" />
+    <Compile Include="Assets\Scripts\OrderInLayerBehaviour.cs" />
     <Compile Include="Assets\Scripts\PlayerEntity.cs" />
     <Compile Include="Assets\Scripts\Singleton\CameraBehaviour.cs" />
     <Compile Include="Assets\Scripts\Singleton\CombatSystem.cs" />
     <Compile Include="Assets\Scripts\Singleton\FramesPerSecondSystem.cs" />
     <Compile Include="Assets\Scripts\Singleton\InputManager.cs" />
     <Compile Include="Assets\Scripts\Singleton\Singleton.cs" />
+    <Compile Include="Assets\Scripts\Singleton\SpellSystem.cs" />
     <Compile Include="Assets\Scripts\Singleton\UserInterface.cs" />
     <Compile Include="Assets\Scripts\Stat.cs" />
     <Compile Include="Assets\Utility\FunctionPeriodic.cs" />

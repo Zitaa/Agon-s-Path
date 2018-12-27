@@ -10,7 +10,14 @@ public class CombatSystem : Singleton
 
 	#region PRIVATE FUNCTIONS
 	
-	
+	private bool Exists(EntityAI entity)
+    {
+        foreach (EntityAI ai in entities)
+        {
+            if (ai.GetID().Equals(entity.GetID())) return true;
+        }
+        return false;
+    }
 	
 	#endregion
 	
@@ -18,23 +25,26 @@ public class CombatSystem : Singleton
 	
 	public void EnterCombat(EntityAI entity)
     {
-        GetGame().ChangeGameState(GameManager.GameStates.COMBAT);
-        entities.Add(entity);
-        transforms.Add(entity.transform);
+        if (!Exists(entity))
+        {
+            entities.Add(entity);
+            transforms.Add(entity.transform);
+            GetGame().SetGameState();
+        }
     }
 
     public void ExitCombat()
     {
-        
+        transforms = new List<Transform>();
+        entities = new List<EntityAI>();
+        GetGame().SetGameState();
     }
 
     public void RemoveEntity(EntityAI entity)
     {
-        if (entity != null)
-        {
-            entities.Remove(entity);
-            transforms.Remove(entity.transform);
-        }
+        entities.Remove(entity);
+        transforms.Remove(entity.transform);
+        if (entities.Count <= 0) ExitCombat();
     }
 
     public int GetEntities() { return entities.Count; }
@@ -44,7 +54,7 @@ public class CombatSystem : Singleton
         List<Vector3> positions = new List<Vector3>();
         for (int i = 0; i < transforms.Count; i++)
         {
-            positions.Add(transforms[i].position);
+            if (transforms[i] != null) positions.Add(transforms[i].position);
         }
         return positions;
     }

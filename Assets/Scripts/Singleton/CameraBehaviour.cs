@@ -11,17 +11,6 @@ public class CameraBehaviour : Singleton
 
 	#region PRIVATE FUNCTIONS
 	
-	private Vector3 GetCentroid(Vector3[] points)
-    {
-        Vector3 centroid = new Vector3(0, 0, -10);
-        foreach (Vector3 point in points)
-        {
-            centroid += point;
-        }
-        centroid /= points.Length;
-        return centroid;
-    }
-	
 	#endregion
 	
 	#region PUBLIC FUNCTIONS
@@ -44,6 +33,13 @@ public class CameraBehaviour : Singleton
                 targetPos = GetCentroid(positions.ToArray());
                 camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
                 break;
+            case GameManager.GameStates.SPELL:
+                Vector2 midPoint = ((Vector2)player.position + (Vector2)Input.mousePosition) / 2;
+                Vector2 offset = midPoint - (Vector2)player.position;
+                offset = Vector2.ClampMagnitude(offset, maxTransitionDistance);
+                targetPos = new Vector3(player.position.x + offset.x, player.position.y + offset.y, camera.transform.position.z);
+                camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
+                break;
         }
     }
 
@@ -51,7 +47,18 @@ public class CameraBehaviour : Singleton
 
     public float GetTransitionSmoothening() { return transitionSmoothening; }
 
-	public Camera GetCamera() { return camera; }
+    public Vector3 GetCentroid(Vector3[] points)
+    {
+        Vector3 centroid = new Vector3(0, 0, -10);
+        foreach (Vector3 point in points)
+        {
+            centroid += point;
+        }
+        centroid /= points.Length;
+        return centroid;
+    }
+
+    public Camera GetCamera() { return camera; }
 	
 	#endregion
 }

@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityAI : MonoBehaviour, IDestructable {
+public class EntityAI : OrderInLayerBehaviour, IDestructable {
 
     [SerializeField] protected EntitySettings settings;
+    [SerializeField] private LayerMask targetMask;
+    [SerializeField] private float force;
+    [SerializeField] private int ID;
 
-    private Rigidbody2D rb2d;
+    protected Rigidbody2D rb2d;
     private SpriteRenderer sr;
-    private Animator anim;
+    protected Animator anim;
     protected GameManager game;
-    private InputManager input;
+    protected InputManager input;
     protected Transform target;
     private Vector2 movement;
     private Vector2 direction;
@@ -19,7 +22,7 @@ public class EntityAI : MonoBehaviour, IDestructable {
 
 	#region UNITY FUNCTIONS
 	
-	protected virtual void Start ()
+	protected virtual new void Start ()
 	{
         rb2d = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
@@ -27,13 +30,16 @@ public class EntityAI : MonoBehaviour, IDestructable {
         game = GameBehaviour.instance.GetGame();
         input = game.GetInput();
         target = game.GetPlayer();
-        
+
+        game.IncreaseEntities();
+        ID = game.GetEntites();
+
         Health = settings.GetHealth();
 	}
 	
-	protected virtual void Update () 
+	protected virtual new void Update () 
 	{
-
+        base.Update();
 	}
 	
     private IEnumerator MovementAIDelay(Vector2 movement)
@@ -44,6 +50,25 @@ public class EntityAI : MonoBehaviour, IDestructable {
         else movement .x = 0;
 
         rb2d.velocity = movement.normalized * settings.GetSpeed() * Time.deltaTime;
+    }
+
+    protected IEnumerator Attack()
+    {
+        yield return new WaitForSeconds(.15f);
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, settings.GetMeleeRange(), targetMask);
+        if (hit.collider != null)
+        {
+            Transform t = hit.collider.transform;
+            EntityAI ai = t.GetComponent<EntityAI>();
+
+            if (ai != null) ai.DecreaseHealth(settings.GetDamage());
+
+            if (direction == (Vector2)transform.right) t.position = new Vector2(t.position.x + force, t.position.y);
+            else if (direction == -(Vector2)transform.right) t.position = new Vector2(t.position.x - force, t.position.y);
+            else if (direction == (Vector2)transform.up) t.position = new Vector2(t.position.x, t.position.y + force);
+            else if (direction == -(Vector2)transform.up) t.position = new Vector2(t.position.x, t.position.y - force);
+        }
     }
 
 	#endregion
@@ -61,7 +86,7 @@ public class EntityAI : MonoBehaviour, IDestructable {
         if (x != 0 || y != 0) anim.SetBool("walking", true);
         else anim.SetBool("walking", false);
 
-        if (game.GetGameState().Equals(GameManager.GameStates.IDLE))
+        if (game.GetGameState() != GameManager.GameStates.COMBAT)
         {
             if (movement.x > 0)
             {
@@ -76,13 +101,13 @@ public class EntityAI : MonoBehaviour, IDestructable {
         }
         else if (game.GetGameState().Equals(GameManager.GameStates.COMBAT))
         {
-            Vector2 cameraPos = game.GetCameraSettings().GetCamera().transform.position;
-            if (transform.position.x > cameraPos.x)
+            Vector2 midPoint = game.GetCameraSettings().GetCentroid(game.GetCombatSystem().GetPositions().ToArray());
+            if (transform.position.x > midPoint.x)
             {
                 sr.flipX = true;
                 direction = -transform.right;
             }
-            else if (transform.position.x < cameraPos.x)
+            else if (transform.position.x < midPoint.x)
             {
                 sr.flipX = false;
                 direction = transform.right;
@@ -106,14 +131,17 @@ public class EntityAI : MonoBehaviour, IDestructable {
 	public void DecreaseHealth(int amount)
     {
         Health -= amount;
+        print(string.Format("{0} took {1} points of damage. {2} / {3}", name, amount, Health, settings.GetHealth()));
         if (Health <= 0) KillEntity();
     }
 
     public void KillEntity()
     {
         game.GetCombatSystem().RemoveEntity(this);
-        Destroy(this);
+        Destroy(this.gameObject);
     }
-	
+
+    public int GetID() { return ID; }
+
 	#endregion
 }

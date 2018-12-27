@@ -38,6 +38,18 @@ public class InputManager : Singleton
         }
         return 0;
     }
+
+    public bool GetKey(KeyCode key)
+    {
+        if (Input.GetKey(key)) return true;
+        return false;
+    }
+
+    public bool GetKeyUp(KeyCode key)
+    {
+        if (Input.GetKeyUp(key)) return true;
+        return false;
+    }
 	
 	#endregion
 }
