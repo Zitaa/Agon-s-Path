@@ -9,15 +9,16 @@ public class GameManager : Singleton
     {
         FPS.Init();
         dynamicEnvironment.Init();
+        discord.Init();
 
         SetGameState();
     }
 
     public enum GameStates
     {
-        IDLE,
-        COMBAT,
-        SPELL
+        Idle,
+        Combat,
+        Spell
     };
 
     [SerializeField] private int entities = 0;
@@ -30,6 +31,7 @@ public class GameManager : Singleton
     [SerializeField] private SpellSystem spellSystem;
     [SerializeField] private FramesPerSecondSystem FPS;
     [SerializeField] private UserInterface UI;
+    [SerializeField] private DiscordBehaviour discord;
 
 	#region PRIVATE FUNCTIONS
 	
@@ -43,9 +45,9 @@ public class GameManager : Singleton
 
     public void SetGameState()
     {
-        state = GameStates.IDLE;
-        if (combatSystem.GetEntities() > 0) state = GameStates.COMBAT;
-        if (spellSystem.IsActive()) state = GameStates.SPELL;
+        state = GameStates.Idle;
+        if (combatSystem.GetEntities() > 0) state = GameStates.Combat;
+        if (spellSystem.IsActive()) state = GameStates.Spell;
     }
 
     public int GetEntites() { return entities; }
@@ -67,6 +69,8 @@ public class GameManager : Singleton
 	public FramesPerSecondSystem GetFramesPerSecondSystem() { return FPS; }
 
     public UserInterface GetUserInterface() { return UI; }
+
+    public DiscordBehaviour GetDiscord() { return discord; }
 	
 	#endregion
 }

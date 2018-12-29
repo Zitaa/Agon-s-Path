@@ -23,17 +23,17 @@ public class CameraBehaviour : Singleton
 
         switch (state)
         {
-            case GameManager.GameStates.IDLE:
+            case GameManager.GameStates.Idle:
                 targetPos = new Vector3(player.position.x, player.position.y, camera.transform.position.z);
                 camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
                 break;
-            case GameManager.GameStates.COMBAT:
+            case GameManager.GameStates.Combat:
                 List<Vector3> positions = GetGame().GetCombatSystem().GetPositions();
                 positions.Add(player.position);
                 targetPos = GetCentroid(positions.ToArray());
                 camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
                 break;
-            case GameManager.GameStates.SPELL:
+            case GameManager.GameStates.Spell:
                 Vector2 midPoint = ((Vector2)player.position + (Vector2)Input.mousePosition) / 2;
                 Vector2 offset = midPoint - (Vector2)player.position;
                 offset = Vector2.ClampMagnitude(offset, maxTransitionDistance);

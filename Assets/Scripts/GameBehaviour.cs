@@ -26,19 +26,66 @@ public class GameBehaviour : MonoBehaviour
         game.GetFramesPerSecondSystem().CalculateFrames(Time.unscaledDeltaTime);
         game.GetCameraSettings().CameraMovement();
         game.GetDynamicEnvironment().UpdateWeatherPosition();
+        game.GetDiscord().RunCallbacks();
+        game.GetDiscord().UpdatePresence();
 	}
-	
-	#endregion
-	
-	#region PRIVATE FUNCTIONS
-	
-	
-	
-	#endregion
-	
-	#region PUBLIC FUNCTIONS
-	
-	public GameManager GetGame() { return game; }
+
+    private void OnDisable()
+    {
+        game.GetDiscord().Terminate();
+    }
+
+    #endregion
+
+    #region PRIVATE FUNCTIONS
+
+
+
+    #endregion
+
+    #region PUBLIC FUNCTIONS
+
+    /*public void RequestRespondYes()
+    {
+        game.GetDiscord().RequestRespondYes();
+    }
+
+    public void RequestRespondNo()
+    {
+        game.GetDiscord().RequestRespondNo();
+    }
+
+    public void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser)
+    {
+        game.GetDiscord().ReadyCallback(ref connectedUser);
+    }
+
+    public void DisconnectedCallback(int errorCode, string message)
+    {
+        game.GetDiscord().DisconnectedCallback(errorCode, message);
+    }
+
+    public void ErrorCallback(int errorCode, string message)
+    {
+        game.GetDiscord().ErrorCallback(errorCode, message);
+    }
+
+    public void JoinCallback(string secret)
+    {
+        game.GetDiscord().JoinCallback(secret);
+    }
+
+    public void SpectateCallback(string secret)
+    {
+        game.GetDiscord().SpectateCallback(secret);
+    }
+
+    public void RequestCallback(ref DiscordRpc.DiscordUser request)
+    {
+        game.GetDiscord().RequestCallback(ref request);
+    }*/ 
+
+    public GameManager GetGame() { return game; }
 	
 	#endregion
 }

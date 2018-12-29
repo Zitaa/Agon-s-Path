@@ -86,7 +86,7 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
         if (x != 0 || y != 0) anim.SetBool("walking", true);
         else anim.SetBool("walking", false);
 
-        if (game.GetGameState() != GameManager.GameStates.COMBAT)
+        if (game.GetGameState() != GameManager.GameStates.Combat)
         {
             if (movement.x > 0)
             {
@@ -99,7 +99,7 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
                 direction = -transform.right;
             }
         }
-        else if (game.GetGameState().Equals(GameManager.GameStates.COMBAT))
+        else if (game.GetGameState().Equals(GameManager.GameStates.Combat))
         {
             Vector2 midPoint = game.GetCameraSettings().GetCentroid(game.GetCombatSystem().GetPositions().ToArray());
             if (transform.position.x > midPoint.x)

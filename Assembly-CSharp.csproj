@@ -63,7 +63,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Building.cs" />
     <Compile Include="Assets\Scripts\Centroid.cs" />
-    <Compile Include="Assets\Scripts\DynamicEnvironment.cs" />
+    <Compile Include="Assets\Scripts\DiscordRPC.cs" />
     <Compile Include="Assets\Scripts\EnemyEntity.cs" />
     <Compile Include="Assets\Scripts\EntityAI.cs" />
     <Compile Include="Assets\Scripts\EntitySettings.cs" />
@@ -74,6 +74,8 @@
     <Compile Include="Assets\Scripts\PlayerEntity.cs" />
     <Compile Include="Assets\Scripts\Singleton\CameraBehaviour.cs" />
     <Compile Include="Assets\Scripts\Singleton\CombatSystem.cs" />
+    <Compile Include="Assets\Scripts\Singleton\DiscordBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Singleton\DynamicEnvironment.cs" />
     <Compile Include="Assets\Scripts\Singleton\FramesPerSecondSystem.cs" />
     <Compile Include="Assets\Scripts\Singleton\InputManager.cs" />
     <Compile Include="Assets\Scripts\Singleton\Singleton.cs" />
