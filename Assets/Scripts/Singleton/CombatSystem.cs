@@ -8,6 +8,8 @@ public class CombatSystem : Singleton
     [SerializeField] private List<Transform> transforms = new List<Transform>();
     private List<EntityAI> entities = new List<EntityAI>();
 
+    private bool inCombat = false;
+
 	#region PRIVATE FUNCTIONS
 	
 	private bool Exists(EntityAI entity)
@@ -27,17 +29,19 @@ public class CombatSystem : Singleton
     {
         if (!Exists(entity))
         {
+            inCombat = true;
+            GetGame().SetGameState();
             entities.Add(entity);
             transforms.Add(entity.transform);
-            GetGame().SetGameState();
         }
     }
 
     public void ExitCombat()
     {
+        inCombat = false;
+        GetGame().SetGameState();
         transforms = new List<Transform>();
         entities = new List<EntityAI>();
-        GetGame().SetGameState();
     }
 
     public void RemoveEntity(EntityAI entity)
@@ -48,6 +52,8 @@ public class CombatSystem : Singleton
     }
 
     public int GetEntities() { return entities.Count; }
+
+    public bool InCombat() { return inCombat; }
 
     public List<Vector3> GetPositions()
     {

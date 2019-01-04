@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class GameManager : Singleton
 {
     public void Init()
     {
+        data.Init();
         FPS.Init();
-        dynamicEnvironment.Init();
+        spellSystem.Init();
+        cameraSettings.Init();
         discord.Init();
 
         SetGameState();
@@ -16,22 +19,30 @@ public class GameManager : Singleton
 
     public enum GameStates
     {
-        Idle,
+        //Idle,
+        Roam,
+        Inventory,
+        Loot,
         Combat,
         Spell
     };
-
+    
     [SerializeField] private int entities = 0;
     [SerializeField] private Transform player;
     [SerializeField] private GameStates state;
     [SerializeField] private InputManager input;
     [SerializeField] private CameraBehaviour cameraSettings;
     [SerializeField] private DynamicEnvironment dynamicEnvironment;
+    [SerializeField] private Inventory inventory;
+    [SerializeField] private LootBehaviour loot;
     [SerializeField] private CombatSystem combatSystem;
     [SerializeField] private SpellSystem spellSystem;
     [SerializeField] private FramesPerSecondSystem FPS;
     [SerializeField] private UserInterface UI;
+    [SerializeField] private PersistentData data;
     [SerializeField] private DiscordBehaviour discord;
+
+    private ItemSerialization itemSerialization = new ItemSerialization();
 
 	#region PRIVATE FUNCTIONS
 	
@@ -45,9 +56,13 @@ public class GameManager : Singleton
 
     public void SetGameState()
     {
-        state = GameStates.Idle;
+        state = GameStates.Roam;
         if (combatSystem.GetEntities() > 0) state = GameStates.Combat;
         if (spellSystem.IsActive()) state = GameStates.Spell;
+        if (inventory.IsActive()) state = GameStates.Inventory;
+        if (loot.IsActive()) state = GameStates.Loot;
+
+        discord.UpdateState(state);
     }
 
     public int GetEntites() { return entities; }
@@ -62,6 +77,10 @@ public class GameManager : Singleton
 
     public DynamicEnvironment GetDynamicEnvironment() { return dynamicEnvironment; }
 
+    public Inventory GetInventory() { return inventory; }
+
+    public LootBehaviour GetLootBehaviour() { return loot; }
+
     public CombatSystem GetCombatSystem() { return combatSystem; }
 
     public SpellSystem GetSpellSystem() { return spellSystem; }
@@ -70,7 +89,11 @@ public class GameManager : Singleton
 
     public UserInterface GetUserInterface() { return UI; }
 
+    public PersistentData GetData() { return data; }
+
     public DiscordBehaviour GetDiscord() { return discord; }
+
+    public ItemSerialization GetItemSerialization() { return itemSerialization; }
 	
 	#endregion
 }

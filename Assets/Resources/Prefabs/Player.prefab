@@ -38,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1028161576952200}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 23.57, y: 7.47, z: 0}
+  m_LocalPosition: {x: 26.88, y: 14.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -121,20 +121,24 @@ MonoBehaviour:
   spriteRenderers:
   - {fileID: 212210259323728166}
   settings:
+    name: Agon
     speed:
-      value: 10
+      Value: 4
     health:
-      value: 100
+      Value: 100
+    mana:
+      Value: 100
     damage:
-      value: 5
+      Value: 5
     meleeRange:
-      value: 3
+      Value: 3
     viewRange:
-      value: 10
+      Value: 8
   targetMask:
     serializedVersion: 2
     m_Bits: 256
   force: 1
+  ID: 2
 --- !u!212 &212210259323728166
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -169,8 +173,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_Sprite: {fileID: 21300040, guid: 63f39a4532afe1644a379c8382062338, type: 3}
+  m_SortingOrder: 4972
+  m_Sprite: {fileID: 21300012, guid: 63f39a4532afe1644a379c8382062338, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

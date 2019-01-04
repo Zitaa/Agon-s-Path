@@ -5,12 +5,45 @@ using UnityEngine;
 [System.Serializable]
 public class CameraBehaviour : Singleton
 {
+    public void Init()
+    {
+        player = GetGame().GetPlayer();
+    }
+
     [SerializeField] private Camera camera;
     [SerializeField] private float maxTransitionDistance;
     [SerializeField] private float transitionSmoothening;
 
+    private Transform player;
+    private Vector3 targetPos;
+
 	#region PRIVATE FUNCTIONS
 	
+    private void RoamingCamera()
+    {
+        targetPos = new Vector3(player.position.x, player.position.y, camera.transform.position.z);
+        camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
+    }
+
+    private void CombatCamera()
+    {
+        List<Vector3> positions = GetGame().GetCombatSystem().GetPositions();
+        positions.Add(player.position);
+        targetPos = GetCentroid(positions.ToArray());
+        camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
+    }
+
+    private void SpellCamera()
+    {
+        /*Vector2 midPoint = ((Vector2)player.position + (Vector2)Input.mousePosition) / 2;
+                Vector2 offset = midPoint - (Vector2)player.position;
+                offset = Vector2.ClampMagnitude(offset, maxTransitionDistance);
+                targetPos = new Vector3(player.position.x + offset.x, player.position.y + offset.y, camera.transform.position.z);
+                camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);*/
+        targetPos = new Vector3(player.position.x, player.position.y, camera.transform.position.z);
+        camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
+    }
+
 	#endregion
 	
 	#region PUBLIC FUNCTIONS
@@ -18,27 +51,16 @@ public class CameraBehaviour : Singleton
     public void CameraMovement()
     {
         GameManager.GameStates state = GetGame().GetGameState();
-        Transform player = GetGame().GetPlayer();
-        Vector3 targetPos = new Vector3();
-
         switch (state)
         {
-            case GameManager.GameStates.Idle:
-                targetPos = new Vector3(player.position.x, player.position.y, camera.transform.position.z);
-                camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
+            case GameManager.GameStates.Roam:
+                RoamingCamera();
                 break;
             case GameManager.GameStates.Combat:
-                List<Vector3> positions = GetGame().GetCombatSystem().GetPositions();
-                positions.Add(player.position);
-                targetPos = GetCentroid(positions.ToArray());
-                camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
+                CombatCamera();
                 break;
             case GameManager.GameStates.Spell:
-                Vector2 midPoint = ((Vector2)player.position + (Vector2)Input.mousePosition) / 2;
-                Vector2 offset = midPoint - (Vector2)player.position;
-                offset = Vector2.ClampMagnitude(offset, maxTransitionDistance);
-                targetPos = new Vector3(player.position.x + offset.x, player.position.y + offset.y, camera.transform.position.z);
-                camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, transitionSmoothening);
+                CombatCamera();
                 break;
         }
     }

@@ -6,12 +6,14 @@ using UnityEngine.UI;
 [System.Serializable]
 public class DynamicEnvironment : Singleton
 {	
-    public void Init()
+    public void Init(int time)
     {
+        currentTime = time;
         text = GetGame().GetUserInterface().GetUIElement<Text>("Time");
-        
         rain = rainEffect.GetComponent<ParticleSystem>();
         groundEffect = rainEffect.transform.GetChild(0).GetComponent<ParticleSystem>();
+
+        GameBehaviour.instance.StartCoroutine(AdvanceTime());
     }
 
     [Header("Time Settings")]
@@ -34,6 +36,7 @@ public class DynamicEnvironment : Singleton
 
     public IEnumerator AdvanceTime()
     {
+        CalculateSunIntensity();
         while (true)
         {
             currentTime += 1;
@@ -53,7 +56,7 @@ public class DynamicEnvironment : Singleton
             ParticleSystem.MainModule main = rain.main;
             main.simulationSpeed = (cycleSpeed >= 1) ? 1 : 1 / cycleSpeed;
 
-            yield return new WaitForSeconds(cycleSpeed);
+            yield return new WaitForSeconds(cycleSpeed / Time.timeScale);
         }
     }
 	
@@ -61,7 +64,23 @@ public class DynamicEnvironment : Singleton
 	
 	#region PRIVATE FUNCTIONS
 	
-	
+	private void CalculateSunIntensity()
+    {
+        if (currentTime > (18*60) && currentTime < (21*60+20))
+        {
+            int timeDifference = currentTime - (18*60);
+            float intensityDifference = .005f * timeDifference;
+            sun.intensity = 1;
+            sun.intensity -= intensityDifference;
+        }
+        else if (currentTime > (6*60) && currentTime < (9*60+20))
+        {
+            int timeDifference = currentTime - (6*60);
+            float intensityDifference = .005f * timeDifference;
+            sun.intensity = 0;
+            sun.intensity += intensityDifference;
+        }
+    }
 	
 	#endregion
 	
@@ -75,6 +94,8 @@ public class DynamicEnvironment : Singleton
     }
 
     public string GetTimeString() { return timeString; }
+
+    public int GetTime() { return currentTime; }
 	
 	#endregion
 }

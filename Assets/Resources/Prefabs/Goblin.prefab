@@ -121,20 +121,25 @@ MonoBehaviour:
   spriteRenderers:
   - {fileID: 212987702321226798}
   settings:
+    name: Goblin
     speed:
-      value: 0
+      Value: 2
     health:
-      value: 10
+      Value: 10
+    mana:
+      Value: 0
     damage:
-      value: 5
+      Value: 5
     meleeRange:
-      value: 3
+      Value: 1
     viewRange:
-      value: 8
+      Value: 8
   targetMask:
     serializedVersion: 2
-    m_Bits: 0
-  force: 1
+    m_Bits: 1024
+  force: 0.3
+  ID: 0
+  loot: {fileID: 1372274309388034, guid: 386a0fd654666fb4085fd663bc75a33a, type: 2}
 --- !u!212 &212987702321226798
 SpriteRenderer:
   m_ObjectHideFlags: 1

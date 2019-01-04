@@ -5,8 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class EntitySettings
 {
+    public string name;
     public Stat speed;
     public Stat health;
+    public Stat mana;
     public Stat damage;
     public Stat meleeRange;
     public Stat viewRange;
@@ -22,6 +24,8 @@ public class EntitySettings
     public int GetSpeed() { return speed.GetValue();}
 
     public int GetHealth() { return health.GetValue(); }
+
+    public int GetMana() { return mana.GetValue(); }
 
     public int GetDamage() { return damage.GetValue(); }
 

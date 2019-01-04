@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityAI : OrderInLayerBehaviour, IDestructable {
-
+public class EntityAI : OrderInLayerBehaviour
+{
     [SerializeField] protected EntitySettings settings;
     [SerializeField] private LayerMask targetMask;
     [SerializeField] private float force;
@@ -15,10 +15,11 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
     protected GameManager game;
     protected InputManager input;
     protected Transform target;
+    private Color normalColor;
     private Vector2 movement;
     private Vector2 direction;
-
-    public int Health { get; private set; }
+    protected int health;
+    protected int mana;
 
 	#region UNITY FUNCTIONS
 	
@@ -30,11 +31,12 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
         game = GameBehaviour.instance.GetGame();
         input = game.GetInput();
         target = game.GetPlayer();
+        normalColor = sr.color;
 
         game.IncreaseEntities();
         ID = game.GetEntites();
 
-        Health = settings.GetHealth();
+        if (!CompareTag("Player")) health = settings.GetHealth();
 	}
 	
 	protected virtual new void Update () 
@@ -47,9 +49,12 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
         yield return new WaitForSeconds(.2f);
 
         if (Mathf.Abs(movement.x) > Mathf.Abs(movement.y)) movement.y = 0;
-        else movement .x = 0;
+        else movement.x = 0;
 
-        rb2d.velocity = movement.normalized * settings.GetSpeed() * Time.deltaTime;
+        if (movement.x > 0) sr.flipX = false;
+        else if (movement.x < 0) sr.flipX = true;
+
+        rb2d.velocity = movement.normalized * settings.GetSpeed();
     }
 
     protected IEnumerator Attack()
@@ -60,7 +65,7 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
         if (hit.collider != null)
         {
             Transform t = hit.collider.transform;
-            EntityAI ai = t.GetComponent<EntityAI>();
+            EnemyEntity ai = t.GetComponent<EnemyEntity>();
 
             if (ai != null) ai.DecreaseHealth(settings.GetDamage());
 
@@ -69,6 +74,13 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
             else if (direction == (Vector2)transform.up) t.position = new Vector2(t.position.x, t.position.y + force);
             else if (direction == -(Vector2)transform.up) t.position = new Vector2(t.position.x, t.position.y - force);
         }
+    }
+
+    protected IEnumerator DamageEffect()
+    {
+        sr.color = Color.red;
+        yield return new WaitForSeconds(.1f);
+        sr.color = normalColor;
     }
 
 	#endregion
@@ -86,7 +98,7 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
         if (x != 0 || y != 0) anim.SetBool("walking", true);
         else anim.SetBool("walking", false);
 
-        if (game.GetGameState() != GameManager.GameStates.Combat)
+        if (!game.GetCombatSystem().InCombat())
         {
             if (movement.x > 0)
             {
@@ -98,24 +110,29 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
                 sr.flipX = true;
                 direction = -transform.right;
             }
+            else if (movement.y > 0) direction = transform.up;
+            else if (movement.y < 0) direction = -transform.up;
         }
-        else if (game.GetGameState().Equals(GameManager.GameStates.Combat))
+        else if (game.GetCombatSystem().InCombat())
         {
             Vector2 midPoint = game.GetCameraSettings().GetCentroid(game.GetCombatSystem().GetPositions().ToArray());
             if (transform.position.x > midPoint.x)
             {
                 sr.flipX = true;
-                direction = -transform.right;
+                if (movement.y == 0) direction = -transform.right;
             }
             else if (transform.position.x < midPoint.x)
             {
                 sr.flipX = false;
-                direction = transform.right;
+                if (movement.y == 0) direction = transform.right;
             }
+
+            if (movement.y > 0) direction = transform.up;
+            else if (movement.y < 0) direction = -transform.up;
         }
 
         movement = new Vector2(x, y);
-        rb2d.velocity = movement.normalized * settings.GetSpeed() * Time.deltaTime;
+        rb2d.velocity = movement.normalized * settings.GetSpeed();
     }
 
     protected virtual void HandleAIMovement()
@@ -123,25 +140,48 @@ public class EntityAI : OrderInLayerBehaviour, IDestructable {
         Vector2 targetMovement = target.position - transform.position;
         StartCoroutine(MovementAIDelay(targetMovement));
     }
-	
-	#endregion
-	
-	#region PUBLIC FUNCTIONS
-	
-	public void DecreaseHealth(int amount)
+
+    protected virtual void EnemyAttack()
     {
-        Health -= amount;
-        print(string.Format("{0} took {1} points of damage. {2} / {3}", name, amount, Health, settings.GetHealth()));
-        if (Health <= 0) KillEntity();
+        float distance = Vector2.Distance(transform.position, target.position);
+        if (distance < settings.GetMeleeRange())
+        {
+            if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            {
+                anim.Play("Attack");
+                float hitChance = Random.value;
+                if (hitChance > .4f)
+                {
+                    PlayerEntity player = game.GetPlayer().GetComponent<PlayerEntity>();
+                    player.DecreaseHealth(settings.GetDamage());
+                }
+            }
+        }
     }
 
-    public void KillEntity()
+    protected virtual void KillEntity()
     {
-        game.GetCombatSystem().RemoveEntity(this);
         Destroy(this.gameObject);
     }
 
+    #endregion
+
+    #region PUBLIC FUNCTIONS
+
+    public virtual void DecreaseHealth(int amount)
+    {
+        StartCoroutine(DamageEffect());
+        health -= amount;
+        print(string.Format("{0} took {1} points of damage. {2} / {3}", name, amount, health, settings.GetHealth()));
+    }
+
     public int GetID() { return ID; }
+
+    public int GetHealth() { return health; }
+
+    public int GetMana() { return mana; }
+
+    public EntitySettings GetSettings() { return settings; }
 
 	#endregion
 }

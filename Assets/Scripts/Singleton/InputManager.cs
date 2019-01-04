@@ -16,6 +16,9 @@ public class InputManager : Singleton
     public KeyCode spellAttack;
     public KeyCode spellActivator;
 
+    [Header("Misc")]
+    public KeyCode inventory;
+
 	#region PRIVATE FUNCTIONS
 	
 	

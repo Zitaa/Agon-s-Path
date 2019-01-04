@@ -94,13 +94,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1201659779840878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcd5cb14327f26f4bb2757e971759b3b, type: 3}
+  m_Script: {fileID: 11500000, guid: d2885c201e86c094a86c7a8f835ecf25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 4
-  speed: 4
-  damage: 0
-  cost: 5
+  speed: 5
+  damage: 5
+  cost: 0
 --- !u!212 &212113870184110300
 SpriteRenderer:
   m_ObjectHideFlags: 1

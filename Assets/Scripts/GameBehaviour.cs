@@ -9,6 +9,8 @@ public class GameBehaviour : MonoBehaviour
     {
         if (instance == null) instance = this;
         else if (instance != null) Destroy(this);
+
+        game.Init();
     }
 
     [SerializeField] private GameManager game;
@@ -17,29 +19,28 @@ public class GameBehaviour : MonoBehaviour
 	
 	private void Start ()
 	{
-        game.Init();
-        StartCoroutine(game.GetDynamicEnvironment().AdvanceTime());
+
 	}
 	
 	private void Update () 
 	{
+        Application.targetFrameRate = (int)game.GetFramesPerSecondSystem().GetMaxFrames();
         game.GetFramesPerSecondSystem().CalculateFrames(Time.unscaledDeltaTime);
         game.GetCameraSettings().CameraMovement();
         game.GetDynamicEnvironment().UpdateWeatherPosition();
-        game.GetDiscord().RunCallbacks();
-        game.GetDiscord().UpdatePresence();
+        game.GetDiscord().InvokeCallbacks();
 	}
 
     private void OnDisable()
     {
-        game.GetDiscord().Terminate();
+        GetGame().GetDiscord().Terminate();
     }
 
     #endregion
 
     #region PRIVATE FUNCTIONS
 
-
+    private void Save() { GetGame().GetData().Save(); }
 
     #endregion
 

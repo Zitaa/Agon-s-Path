@@ -1,119 +1,102 @@
-﻿using UnityEngine;
-
-[System.Serializable]
-public class DiscordJoinEvent : UnityEngine.Events.UnityEvent<string> { }
-
-[System.Serializable]
-public class DiscordSpectateEvent : UnityEngine.Events.UnityEvent<string> { }
-
-[System.Serializable]
-public class DiscordJoinRequestEvent : UnityEngine.Events.UnityEvent<DiscordRpc.DiscordUser> { }
+﻿using System.Collections.Generic;
+using DiscordRPC;
+using DiscordRPC.Logging;
+using UnityEngine;
 
 [System.Serializable]
 public class DiscordBehaviour : Singleton
-{	
+{
     public void Init()
     {
-        Debug.Log("Discord: init");
-        handlers = new DiscordRpc.EventHandlers();
-        handlers.readyCallback += ReadyCallback;
-        handlers.disconnectedCallback += DisconnectedCallback;
-        handlers.errorCallback += ErrorCallback;
-        handlers.joinCallback += JoinCallback;
-        handlers.spectateCallback += SpectateCallback;
-        handlers.requestCallback += RequestCallback;
-        DiscordRpc.Initialize(applicationId, ref handlers, true, optionalSteamId);
+        client = new DiscordRpcClient(appID, steamID, false, (int)pipe, new DiscordRPC.Unity.DiscordNativeNamedPipe());
+        DiscordPresence presence = new DiscordPresence();
+        
+        client.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+        
+        client.OnReady += (sender, e) =>
+        {
+            Debug.Log(string.Format("Received Ready from user {0}", e.User.Username));
+        };
 
-        presence.details = GetGame().GetGameState().ToString();
-        presence.startTimestamp = 0;
-        presence.largeImageKey = "largeimage";
-        presence.smallImageKey = "smallimage";
-        DiscordRpc.UpdatePresence(presence);
+        client.OnPresenceUpdate += (sender, e) =>
+        {
+            Debug.Log(string.Format("Received Update! {0}", e.Presence));
+        };
+
+        client.Initialize();
+
+        client.SetPresence(new DiscordPresence()
+        {
+            state = "Roaming",
+            details = string.Empty,
+            smallAsset = new DiscordAsset() { image = "smallimage" },
+            largeAsset = new DiscordAsset() { image = "largeimage" },
+            startTime = new DiscordTimestamp(Time.realtimeSinceStartup)
+        }.ToRichPresence());
     }
 
-    public DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence();
-    public string applicationId;
-    public string optionalSteamId;
-    public DiscordRpc.DiscordUser joinRequest;
-    public UnityEngine.Events.UnityEvent onConnect;
-    public UnityEngine.Events.UnityEvent onDisconnect;
-    public UnityEngine.Events.UnityEvent hasResponded;
-    public DiscordJoinEvent onJoin;
-    public DiscordJoinEvent onSpectate;
-    public DiscordJoinRequestEvent onJoinRequest;
-
-    DiscordRpc.EventHandlers handlers;
-
-    #region PRIVATE FUNCTIONS
-
-
-
-    #endregion
-
-    #region PUBLIC FUNCTIONS
-
-    public void RunCallbacks() { DiscordRpc.RunCallbacks(); }
-
-    public void Terminate()
+    public enum DiscordPipes
     {
-        Debug.Log("Discord: Shutdown");
-        DiscordRpc.Shutdown();
-    }
+        FirstAvailable = -1,
+        Pipe0 = 0,
+        Pipe1 = 1,
+        Pipe2 = 2,
+        Pipe3 = 3,
+        Pipe4 = 4,
+        Pipe5 = 5,
+        Pipe6 = 6,
+        Pipe7 = 7,
+        Pipe8 = 8,
+        Pipe9 = 9
+    };
 
-    public void UpdatePresence()
-    {
-        presence.state = "Time: " + GetGame().GetDynamicEnvironment().GetTimeString();
-        DiscordRpc.UpdatePresence(presence);
-    }
+    [SerializeField] private DiscordRpcClient client;
+    [SerializeField] private string appID;
+    [SerializeField] private string steamID;
+    [SerializeField] private DiscordPipes pipe = DiscordPipes.FirstAvailable;
 
-    public void RequestRespondYes()
-    {
-        Debug.Log("Discord: responding yes to Ask to Join request");
-        DiscordRpc.Respond(joinRequest.userId, DiscordRpc.Reply.Yes);
-        hasResponded.Invoke();
-    }
+	#region UNITY FUNCTIONS
+	
+	private void Start ()
+	{
+		
+	}
+	
+	private void Update () 
+	{
+		
+	}
+	
+	#endregion
+	
+	#region PRIVATE FUNCTIONS
+	
+	
+	
+	#endregion
+	
+	#region PUBLIC FUNCTIONS
+	
+	public void InvokeCallbacks() { client.Invoke(); }
 
-    public void RequestRespondNo()
-    {
-        Debug.Log("Discord: responding no to Ask to Join request");
-        DiscordRpc.Respond(joinRequest.userId, DiscordRpc.Reply.No);
-        hasResponded.Invoke();
-    }
+    public void Terminate() { client.Dispose(); }
 
-    public void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser)
+    public void UpdateState(GameManager.GameStates state)
     {
-        Debug.Log(string.Format("Discord: connected to {0}#{1}: {2}", connectedUser.username, connectedUser.discriminator, connectedUser.userId));
-        onConnect.Invoke();
-    }
-
-    public void DisconnectedCallback(int errorCode, string message)
-    {
-        Debug.Log(string.Format("Discord: disconnect {0}: {1}", errorCode, message));
-        onDisconnect.Invoke();
-    }
-
-    public void ErrorCallback(int errorCode, string message)
-    {
-        Debug.Log(string.Format("Discord: error {0}: {1}", errorCode, message));
-    }
-
-    public void JoinCallback(string secret)
-    {
-        Debug.Log(string.Format("Discord: join ({0})", secret));
-        onJoin.Invoke(secret);
-    }
-
-    public void SpectateCallback(string secret)
-    {
-        Debug.Log(string.Format("Discord: spectate ({0})", secret));
-        onSpectate.Invoke(secret);
-    }
-
-    public void RequestCallback(ref DiscordRpc.DiscordUser request)
-    {
-        Debug.Log(string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
-        joinRequest = request;
-        onJoinRequest.Invoke(request);
+        string stateString = "";
+        switch (state)
+        {
+            case GameManager.GameStates.Roam:
+                stateString = "Roaming";
+                break;
+            case GameManager.GameStates.Combat:
+                stateString = "Battling";
+                break;
+            case GameManager.GameStates.Spell:
+                stateString = "Casting spells";
+                break;
+        }
+        client.UpdateState(stateString);
     }
 
     #endregion

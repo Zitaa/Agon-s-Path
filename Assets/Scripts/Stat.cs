@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Stat
 {
-    [SerializeField] private int value;
+    [SerializeField] private int Value;
 
     private List<int> modifiers = new List<int>();
     
@@ -21,7 +21,7 @@ public class Stat
 
     public int GetValue()
     {
-        int result = value;
+        int result = Value;
         modifiers.ForEach(x => result += x);
         return result;
     }

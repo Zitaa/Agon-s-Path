@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyEntity : EntityAI
 {
+    [SerializeField] private GameObject loot;
+
     private bool inCombat = false;
 
 	#region UNITY FUNCTIONS
@@ -11,17 +13,18 @@ public class EnemyEntity : EntityAI
 	protected override void Start ()
 	{
         base.Start();
-        settings.speed.AddModifier(200);
+        this.name = settings.name;
 	}
 	
 	protected override void Update () 
 	{
         base.Update();
         float distance = Vector2.Distance(transform.position, target.position);
-        if (distance <= 5)
+        if (distance <= settings.GetViewRange())
         {
             EnterCombat();
             base.HandleAIMovement();
+            base.EnemyAttack();
         }
         else ExitCombat();
 	}
@@ -42,12 +45,23 @@ public class EnemyEntity : EntityAI
         inCombat = false;
         rb2d.velocity = Vector2.zero;
     }
-	
-	#endregion
-	
-	#region PUBLIC FUNCTIONS
-	
-	
-	
-	#endregion
+
+    protected override void KillEntity()
+    {
+        game.GetCombatSystem().RemoveEntity(this);
+        Instantiate(loot, transform.position, Quaternion.identity);
+        base.KillEntity();
+    }
+
+    #endregion
+
+    #region PUBLIC FUNCTIONS
+
+    public override void DecreaseHealth(int amount)
+    {
+        base.DecreaseHealth(amount);
+        if (health <= 0) KillEntity();
+    }
+
+    #endregion
 }

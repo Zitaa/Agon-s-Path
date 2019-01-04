@@ -31,6 +31,8 @@ public class FramesPerSecondSystem : Singleton
     }
 
     public float GetFrames() { return frames; }
-	
+
+    public float GetMaxFrames() { return maxFrames; }
+
 	#endregion
 }

@@ -7,5 +7,7 @@ public class Singleton
     private static readonly Singleton instance = new Singleton();
     public static Singleton Instance { get { return instance; } }
 
-    public GameManager GetGame() { return GameBehaviour.instance.GetGame(); }
+    protected GameManager GetGame() { return GameBehaviour.instance.GetGame(); }
+
+    protected GameBehaviour GetGameBehaviour() { return GameBehaviour.instance; }
 }
