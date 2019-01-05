@@ -7,6 +7,7 @@ public class EnemyEntity : EntityAI
     [SerializeField] private GameObject loot;
 
     private bool inCombat = false;
+    private bool isDead = false;
 
 	#region UNITY FUNCTIONS
 	
@@ -48,6 +49,7 @@ public class EnemyEntity : EntityAI
 
     protected override void KillEntity()
     {
+        isDead = true;
         game.GetCombatSystem().RemoveEntity(this);
         Instantiate(loot, transform.position, Quaternion.identity);
         base.KillEntity();
@@ -60,7 +62,7 @@ public class EnemyEntity : EntityAI
     public override void DecreaseHealth(int amount)
     {
         base.DecreaseHealth(amount);
-        if (health <= 0) KillEntity();
+        if (health <= 0 && !isDead) KillEntity();
     }
 
     #endregion

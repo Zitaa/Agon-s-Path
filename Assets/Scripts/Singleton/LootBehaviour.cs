@@ -46,6 +46,17 @@ public class LootBehaviour : Singleton
         }
     }
 
+    public void TakeLoot(List<Item> loot)
+    {
+        if (loot != null)
+        {
+            for (int i = 0; i < loot.Count; i++)
+            {
+                GetGame().GetInventory().AddItem(loot[i]);
+            }
+        }
+    }
+
     public List<Item> GenerateLoot()
     {
         List<Item> loot = new List<Item>();

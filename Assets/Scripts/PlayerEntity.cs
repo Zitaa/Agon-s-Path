@@ -19,6 +19,8 @@ public class PlayerEntity : EntityAI
         }
     }
 
+    [SerializeField] private List<Interactable> interactables = new List<Interactable>();
+
     private Slider healthBar;
     private Slider manaBar;
 
@@ -59,6 +61,22 @@ public class PlayerEntity : EntityAI
         {
             if (!game.GetInventory().IsActive()) game.GetInventory().Enable();
             else game.GetInventory().Disable();
+        }
+        if (input.GetKeyUp(input.interact))
+        {
+            if (interactables.Count > 0)
+            {
+                Loot loot = interactables[0] as Loot;
+                if (!game.GetLootBehaviour().IsActive()) game.GetLootBehaviour().Enable(loot.GetLoot());
+                else
+                {
+                    game.GetLootBehaviour().TakeLoot(loot.GetLoot());
+                    game.GetLootBehaviour().Disable();
+                    GameObject clone = interactables[0].gameObject;
+                    interactables.Remove(interactables[0]);
+                    Destroy(clone);
+                }
+            }
         }
 
         switch (game.GetGameState())
@@ -113,6 +131,32 @@ public class PlayerEntity : EntityAI
         healthBar.value = health;
     }
 
+    public bool AddInteractable(Interactable interactable)
+    {
+        if (interactable != null)
+        {
+            interactables.Add(interactable);
+            return true;
+        }
+        return false;
+    }
+
+    public bool RemoveInteractable(Interactable interactable)
+    {
+        if (interactable != null)
+        {
+            foreach (Interactable _interactable in interactables)
+            {
+                if (interactable.GetID().Equals(_interactable.GetID()))
+                {
+                    interactables.Remove(_interactable);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public bool DecreaseMana(int amount)
     {
         int difference = mana - amount;
@@ -121,6 +165,8 @@ public class PlayerEntity : EntityAI
         manaBar.value = mana;
         return true;
     }
+
+    public List<Interactable> GetInteractables() { return interactables; }
 
     #endregion
 }
